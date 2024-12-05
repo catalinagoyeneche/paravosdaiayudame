@@ -4,24 +4,40 @@ class Juego {
     this.crearEnemigos();
     this.crearPersonaje();
     this.bala = null;
+    this.estado= "jugando"
   }
 
   dibujar() {
+    if (this.estado== "jugando") {
+      this.dibujarPartida()
+    } else if (this.estado=="ganado") {
+      this.pantalla.ganaste()
+    }
+  }
+
+  dibujarPartida() {
+    console.log("entro dibujar");
     this.personaje.dibujar();
     this.personaje.mover();
-    
+
     if (this.bala) {
       this.bala.mover();
       this.bala.dibujar();
-      this.bala.rebotePersonaje(this.personaje);
-      this.bala.reboteEnemigo(this.enemigos); 
-      if (this.bala.posX < 0 || this.bala.posX > width || this.bala.posY < 0 || this.bala.posY > height) {
-        this.bala = null; 
+      this.personaje.haTocadoLaBala(this.bala)
+
+        for (let i = this.enemigos.length - 1; i >= 0; i--) {
+        let enemigo = this.enemigos[i];
+        if (enemigo) {
+          this.enemigos[i] = enemigo.haTocadoBala (this.bala)
+        }
       }
     }
-    
-    for (let i = 0; i < this.enemigos.length; i++) {
-      this.enemigos[i].dibujar();
+    this.JuegoGanado()
+      this.JuegoPerdido()
+      for (let i = 0; i < this.enemigos.length; i++) {
+      if (this.enemigos[i]) {
+        this.enemigos[i].dibujar();
+      }
     }
   }
 
@@ -35,6 +51,22 @@ class Juego {
   crearPersonaje() {
     this.personaje = new Personaje(width / 2, height - 50);
   }
+
+  JuegoGanado() {
+    for (let i = 0; i < this.enemigos.length; i++) {
+      if (this.enemigos[i]) {
+        return;
+      } //si todos los enemigos estan en null el jugador gana kpo tuki
+    }
+    this.estado="ganado"
+  }
+  JuegoPerdido() {
+    if (this.bala && this.personaje.estadebajo(this.bala)) {
+      this.estado="perdido"
+    }
+  }
+
+
 
   teclaPresionada(keyCode) {
     this.personaje.teclaPresionada(keyCode);

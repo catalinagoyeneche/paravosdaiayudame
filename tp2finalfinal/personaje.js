@@ -27,4 +27,20 @@ class Personaje {
 
   teclaLiberada(keyCode) {
   }
+  
+  
+  haTocadoLaBala(bala){
+    if (bala.posX + bala.radio > this.posX && bala.posX - bala.radio < this.posX + this.ancho &&
+      bala.posY + bala.radio > this.posY && bala.posY - bala.radio < this.posY + this.altura){
+      bala.rebotePersonaje();
+      
+    }
+  }
+  estadebajo(bala){
+    if (bala.posY - bala.radio > this.posY){
+    return true
+  }
+  return false
+  }
+
 }
